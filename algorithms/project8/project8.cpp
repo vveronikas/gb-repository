@@ -208,13 +208,14 @@ void printLinks(int* arr)
 void countLinksAdjacent(int** matrix, int* visited, int* links, int st)
 {
 	visited[st] = 1;
+	if (links[st] == -1) links[st] = 0;
 	int next = -1;
 	for (size_t r = 0; r < SIZE; r++)
 	{
 		if (matrix[st][r] == 1 && !visited[r])
 			next = r;
 
-		if (matrix[st][r] == 1) 
+		if (matrix[st][r] == 1 && st != r) 
 		{
 			if (links[r] == -1) links[r] = 0;
 			links[r]++;
@@ -232,7 +233,7 @@ void countLinksAll(int ** matrix)
 		int count = 0;
 		for (size_t i = 0; i < SIZE; i++)
 		{
-			if (matrix[i][j] == 1) count++;
+			if (matrix[i][j] == 1 && i != j) count++;
 		}
 		links[j] = count;
 	}
@@ -247,10 +248,8 @@ int main()
 	initMatrix(matrix);
 	ins(matrix, 0, 1);
 	ins(matrix, 0, 2);
-	ins(matrix, 0, 3);
-	ins(matrix, 0, 4);
-	ins(matrix, 1, 2);
 	ins(matrix, 1, 3);
+	ins(matrix, 3, 4);
 
 	printMatrix(matrix);
 	depthTravers(matrix, 0);
@@ -271,6 +270,7 @@ int main()
 	ins(matrix2, 2, 1);
 	ins(matrix2, 3, 0);
 	ins(matrix2, 3, 2);
+	ins(matrix2, 0, 0);
 	
 	printMatrix(matrix2);
 
