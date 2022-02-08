@@ -29,12 +29,7 @@ private:
     uint8_t m_alpha = 255;
 public:
     RGBA(uint8_t _red, uint8_t _green, uint8_t _blue, uint8_t _alpha)
-    {
-        m_red = _red;
-        m_green = _green;
-        m_blue = _blue;
-        m_alpha = _alpha;
-    };
+        : m_red(_red), m_green(_green), m_blue(_blue), m_alpha(_alpha) { };
 
     void print()
     {
@@ -91,12 +86,9 @@ public:
     void print()
     {
         std::cout << "( ";
-        for (size_t i = 0; i < 10; i++)
+        for (size_t i = 0; i < len; i++)
         {
-            if (arr[i] != 0)
                 std::cout << arr[i];
-            else
-                break;
         }
         std::cout << " )" << std::endl;
     };
