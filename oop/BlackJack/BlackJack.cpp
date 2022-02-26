@@ -1,102 +1,63 @@
-﻿// BlackJack.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <iomanip>
+#include <algorithm>
+#include "BlackJack.h"
 
 using namespace std;
 
-enum CardSuit
+Card::Card(CardSuit s, CardValue v) { suit = s, value = v, isFace = true; };
+Card::~Card() {};
+void Card::flip()
 {
-    DIAMONDS,  // бубы
-    HEARTS,    // черви
-    CLUBS,     // трефы
-    SPADERS    // пики
-};
-
-enum CardValue
+    if (isFace == true) isFace = false;
+    else isFace = true;
+}
+int Card::getValue()
 {
-    ACE = 1, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN,
-    JACK, QUEEN, KING
-};
-
-class Card
-{
-protected:
-    CardSuit suit;
-    CardValue value;
-    bool isFace;
-public:
-    Card(CardSuit s, CardValue v) { suit = s, value = v, isFace = false; };
-
-    void flip()
+    if (isFace)
     {
-        if (isFace == true) isFace = false;
-        else isFace = true;
+        if (value > 10) return 10;
+        else return int(value);
     }
-    int getValue()
-    {
-        if (isFace)
-        {
-            if (value > 10) return 10;
-            else return int(value);
-        }
-        else return 0;
-        
-    }
-
-    friend ostream& operator<< (ostream& out, const Card c);
-};
+    else return 0;
+}
 
 ostream& operator<< (ostream& out, const Card c)
 {
-
    const string suits[] = { "d", "h", "c", "s" };
    const string ranks[] = { "NULL", "ACE", "TWO", "THREE", "FOUR", "FIVE", "SIX", 
                             "SEVEN", "EIGHT", "NINE", "TEN", "JACK", "QUEEN", "KING"};
   
-    if (c.isFace) out << "[" << suits[c.suit] << " , " << ranks[c.value] << "] ";
-    else out << "[XX] ";
-    return out;
+   if (c.isFace) out << "[" << suits[c.suit] << " , " << ranks[c.value] << "] ";
+   else out << "[XX] ";
+   return out;
 }
 
-class Hand
+Hand::Hand() {};
+Hand::~Hand() {};
+void Hand::add(Card* c) { cards.push_back(c); }
+void Hand::clear() { cards.clear(); }
+int Hand::getTotal() const
 {
-protected:
-    std::vector<Card*> cards;
-public:
-    void add(Card* c) { cards.push_back(c); }
-    void clear() { cards.clear(); }
-    int getTotal () const
+    if (cards.empty())
     {
-        if (cards.empty())
-        {
-            return 0;
-        }
-
-        int sum = 0;
-        for (auto i = cards.begin(); i < cards.end(); i++)
-        {
-            if ((**i).getValue() == ACE && sum < 11) sum += 11;  
-            else sum += (**i).getValue();
-        }
-        return sum;
+        return 0;
     }
-};
 
-class GenericPlayer : public Hand
-{
-protected:
-    string name;
-public:
-    GenericPlayer(string s) { name = s; }
-    virtual bool IsHitting() = 0;
-    bool IsBusted() {return (getTotal() > 21); }
-    void Bust() { cout << name << " is busted" << endl; }
+    int sum = 0;
+    for (auto i = cards.begin(); i < cards.end(); i++)
+    {
+        if ((**i).getValue() == ACE && sum < 11) sum += 11;
+        else sum += (**i).getValue();
+    }
+    return sum;
+}
 
-    friend ostream& operator<< (ostream& out, const GenericPlayer &p);
-};
+GenericPlayer::GenericPlayer(string s) { name = s; };
+GenericPlayer::~GenericPlayer() {};
+bool GenericPlayer::IsBusted() { return (getTotal() > 21); }
+void GenericPlayer::Bust() { cout << name << " is busted" << endl; }
 
 ostream& operator<< (ostream& out, const GenericPlayer &p)
 {
@@ -107,94 +68,156 @@ ostream& operator<< (ostream& out, const GenericPlayer &p)
     }
     out << endl;
     out << "Total value: " << p.getTotal() << endl << endl;
-    
     return out;
 }
 
-class Player : public GenericPlayer
+Player::Player(string s) : GenericPlayer(s) {};
+Player::~Player() {};
+bool Player::IsHitting()
 {
-public:
-    Player(string s) : GenericPlayer(s) {};
-    virtual bool IsHitting() override 
+    char ch;
+    do
     {
-        char ch;
-        do 
+        cout << name << ", do you need another card? Total value now: " << getTotal() << " (y / n) : ";
+        cin >> setw(1) >> ch;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    } while (ch != 'y' && ch != 'n');
+
+    if (ch == 'y') return true;
+    else if (ch == 'n') return false;
+}
+void Player::Win() const { cout << name << " won!" << endl; }
+void Player::Lose() const { cout << name << " lost :(" << endl; }
+void Player::Push() const { cout << name << ", it is draw." << endl; }
+
+House::House() : GenericPlayer("House") {};
+House::~House() {};
+bool House::IsHitting() {return (getTotal() <= 16); }
+void House::FlipFirstCard()
+{
+    auto it = cards.begin();
+    (*it)->flip();
+}
+
+Deck::Deck() { populate(); }
+Deck::~Deck() {};
+void Deck::populate()
+{
+    for (size_t i = DIAMONDS; i <= SPADERS; i++)
+    {
+        for (size_t j = ACE; j < KING; j++)
         {
-            cout << "Do you need another one card? (y/n): ";
-            cin >> setw(1) >> ch;
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-        } while (ch != 'y' && ch != 'n');
-
-        if (ch == 'y') return true;
-        else if (ch == 'n') return false;
+            add(new Card(static_cast<CardSuit>(i), static_cast<CardValue>(j)));
+        }
     }
-    void Win() const { cout << name << " won!" << endl; }
-    void Lose() const { cout << name << " lost :(" << endl; }
-    void Push() const { cout << name << ", it is draw." << endl; }
-};
-
-class House : public GenericPlayer
+}
+void Deck::shuffle() { random_shuffle(cards.begin(), cards.end()); };
+void Deck::deal(Hand& h)
 {
-public:
-    House() : GenericPlayer("House") {};
-    virtual bool IsHitting() override {return (getTotal() <= 16); }
-    void FlipFirstCard()
+    if (cards.empty())
     {
-        auto it = cards.begin();
-        (*it)->flip();
+        cout << "There are no any cards!" << endl;
+    }
+    else
+    {
+        h.add(cards.back());
+        cards.pop_back();
+    }
+};
+void Deck::additionalCards(GenericPlayer& p)
+{
+    while (p.IsHitting() && !p.IsBusted())
+    {
+        deal(p);
+        cout << p;
+        if (p.IsBusted())
+            p.Bust();
     }
 };
 
-int main()
+Game::Game(const vector<string>& names)
 {
+    vector<string>::const_iterator it;
+    for (it = names.begin(); it < names.end(); it++)
+    {
+        players.push_back(Player(*it));
+    }
+    deck.populate();
+    deck.shuffle();
+}
+Game::~Game() {};
 
-    /*3. Реализовать класс Player, который наследует от класса GenericPlayer. У этого класса будет 4 метода:
-        virtual bool IsHitting() const - реализация чисто виртуальной функции базового класса. 
-        Метод спрашивает у пользователя, нужна ли ему еще одна карта и возвращает ответ пользователя в виде true или false. 
-        void Win() const - выводит на экран имя игрока и сообщение, что он выиграл.
-        void Lose() const - выводит на экран имя игрока и сообщение, что он проиграл.
-        void Push() const - выводит на экран имя игрока и сообщение, что он сыграл вничью.*/
+void Game::play()
+{
+    for (size_t i = 0; i < 2; i++)
+    {
+        for (auto i = players.begin(); i < players.end(); i++)
+        {
+            deck.deal(*i);
+        }
+        deck.deal(house);
+    }
 
-        Card c1(DIAMONDS, JACK);
-        Card c2(DIAMONDS, TWO);
-        Card c3(DIAMONDS, ACE);
+    house.FlipFirstCard();
 
-        Player p1("Veronika");
-        p1.add(&c1);
-        p1.add(&c2);
-        p1.add(&c3);
+    for (auto i = players.begin(); i < players.end(); i++)
+    {
+        cout << *i;
+    }
+    cout << house;
 
-        p1.IsHitting();
+    for (auto i = players.begin(); i < players.end(); i++)
+    {
+        deck.additionalCards(*i);
+    }
 
-    /*4. Реализовать класс House, который представляет дилера. Этот класс наследует от класса GenericPlayer. У него есть 2 метода:
-        virtual bool IsHitting() const - метод указывает, нужна ли дилеру еще одна карта. Если у дилера не больше 16 очков, то он берет еще одну карту.
-        void FlipFirstCard() - метод переворачивает первую карту дилера.*/
+    house.FlipFirstCard();
+    deck.additionalCards(house);
 
-        House h;
-        Card c4(HEARTS, KING);
-        Card c5(HEARTS, QUEEN);
-        h.add(&c4);
-        h.add(&c5);
-        h.FlipFirstCard();
+    if (house.IsBusted())
+    {
+        for (auto i = players.begin(); i < players.end(); i++)
+        {
+            if (!(*i).IsBusted())
+            {
+                (*i).Win();
+            }
+            else
+            {
+                (*i).Lose();
+            }
+        }
+    }
+    else
+    {
+        for (auto i = players.begin(); i < players.end(); i++)
+        {
+            if (!(*i).IsBusted())
+            {
+                if ((*i).getTotal() > house.getTotal())
+                {
+                    (*i).Win();
+                }
+                else if ((*i).getTotal() < house.getTotal())
+                {
+                    (*i).Lose();
+                }
+                else
+                {
+                    (*i).Push();
+                }
+            }
+            else
+            {
+                (*i).Lose();
+            }
+        }
+    }
 
-    /*5. Написать перегрузку оператора вывода для класса Card. Если карта перевернута рубашкой вверх (мы ее не видим),
-    вывести ХХ, если мы ее видим, вывести масть и номинал карты. 
-    Также для класса GenericPlayer написать перегрузку оператора вывода, который должен отображать имя игрока и его карты,
-    а также общую сумму очков его карт.*/
-
-        c1.flip();
-        c2.flip();
-        c3.flip();
-
-        cout << p1;
-        cout << h;
-       
-
-
-
-
-
-
-    
+    for (auto i = players.begin(); i < players.end(); i++)
+    {
+        (*i).clear();
+    }
+    house.clear();
 }
