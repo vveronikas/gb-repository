@@ -1,7 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include <string>
+#include <iostream>
+#include <fstream>
 
 namespace MyTools {
 
@@ -40,15 +41,33 @@ namespace MyTools {
 
 	//=============================================================================================
 
-	void __fastcall OpenLogFile(const std::string& FN);
+    class FileLoggerSingletone
+    {
+    public:
+        static FileLoggerSingletone* GetInstance()
+        {
+            if (singletone == nullptr)
+            {
+                singletone = new FileLoggerSingletone();
+            }
+            return singletone;
+        }
 
-	void CloseLogFile();
+        FileLoggerSingletone(const FileLoggerSingletone& other) = delete;
+        FileLoggerSingletone& operator=(const FileLoggerSingletone&) = delete;
 
-	void __fastcall WriteToLog(const std::string& str);
+        void __fastcall OpenLogFile(const std::string& FN);
+        void CloseLogFile();
 
-	void __fastcall WriteToLog(const std::string& str, int n);
+        void __fastcall WriteToLog(const std::string& str);
+        void __fastcall WriteToLog(const std::string& str, int n);
+        void __fastcall WriteToLog(const std::string& str, double d);
 
-	void __fastcall WriteToLog(const std::string& str, double d);
+    private:
+        FileLoggerSingletone() {};
+        std::ofstream logOut;
+        static FileLoggerSingletone* singletone;
+    };
 
 	//=============================================================================================
 

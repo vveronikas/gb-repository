@@ -16,7 +16,7 @@ using namespace std;
 
 namespace MyTools {
 
-    ofstream logOut;
+    FileLoggerSingletone* FileLoggerSingletone::singletone = nullptr;
 
     //=============================================================================================
 
@@ -70,12 +70,12 @@ namespace MyTools {
 
     //=============================================================================================
 
-    void __fastcall OpenLogFile(const string& FN)
+    void __fastcall FileLoggerSingletone::OpenLogFile(const string& FN)
     {
         logOut.open(FN, ios_base::out);
     }
 
-    void CloseLogFile()
+    void FileLoggerSingletone::CloseLogFile()
     {
         if (logOut.is_open())
         {
@@ -93,7 +93,7 @@ namespace MyTools {
         return string(buf);
     }
 
-    void __fastcall WriteToLog(const string& str)
+    void __fastcall FileLoggerSingletone::WriteToLog(const string& str)
     {
         if (logOut.is_open())
         {
@@ -101,7 +101,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall WriteToLog(const string& str, int n)
+    void __fastcall FileLoggerSingletone::WriteToLog(const string& str, int n)
     {
         if (logOut.is_open())
         {
@@ -109,7 +109,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall WriteToLog(const string& str, double d)
+    void __fastcall FileLoggerSingletone::WriteToLog(const string& str, double d)
     {
         if (logOut.is_open())
         {
