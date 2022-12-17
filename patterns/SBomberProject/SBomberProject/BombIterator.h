@@ -1,3 +1,4 @@
+#pragma once
 #include "DynamicObject.h"
 #include "Bomb.h"
 
