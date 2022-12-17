@@ -202,16 +202,21 @@ Ground* SBomber::FindGround() const
     return nullptr;
 }
 
+IIterator* SBomber::CreateIterator() const
+{
+    return new BombIterator(vecDynamicObj);
+}
+
 vector<Bomb*> SBomber::FindAllBombs() const
 {
     vector<Bomb*> vecBombs;
+    IIterator* ibomb = CreateIterator();
 
-    for (size_t i = 0; i < vecDynamicObj.size(); i++)
+    while (ibomb->hasNext())
     {
-        Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[i]);
-        if (pBomb != nullptr)
+        if (ibomb->next() != nullptr)
         {
-            vecBombs.push_back(pBomb);
+            vecBombs.push_back(dynamic_cast<Bomb*>(ibomb->next()));
         }
     }
 

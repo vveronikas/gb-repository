@@ -9,6 +9,7 @@
 #include "Tank.h"
 #include "MyTools.h"
 #include "Command.h"
+#include "BombIterator.h"
 
 class SBomber
 {
@@ -26,6 +27,8 @@ public:
     void DrawFrame();
     void MoveObjects();
     void CheckObjects();
+
+    IIterator* CreateIterator() const ;
 
 private:
 
