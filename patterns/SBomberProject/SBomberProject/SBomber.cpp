@@ -8,6 +8,7 @@
 #include "Ground.h"
 #include "Tank.h"
 #include "House.h"
+#include "LogVisitor.h"
 #include "Command.cpp"
 
 using namespace std;
@@ -103,7 +104,9 @@ void SBomber::MoveObjects()
     {
         if (vecDynamicObj[i] != nullptr)
         {
+            LogVisitor v;
             vecDynamicObj[i]->Move(deltaTime);
+            vecDynamicObj[i]->Accept(v);
         }
     }
 };
