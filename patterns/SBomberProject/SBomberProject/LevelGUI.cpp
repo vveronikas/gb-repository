@@ -40,6 +40,8 @@ void LevelGUI::Draw() const
     cout << "BombsNum: " << bombsNumber;
     GotoXY(62, 1);
     cout << "Score: " << score;
+
+    mediator->Notify("Booo!");
 }
 
 void __fastcall LevelGUI::SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint16_t bombsNumberNew, int16_t scoreNew)

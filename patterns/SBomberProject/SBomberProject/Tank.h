@@ -1,12 +1,14 @@
 #pragma once
 
 #include <stdint.h>
+#include <string>
 
 #include "DestroyableGroundObject.h"
 
+class Mediator;
+
 class TankAdaptee {
 public:
-
     TankAdaptee() : x(0.0), y(0.0), width(0) { }
 
     void Paint() const;
@@ -20,6 +22,9 @@ public:
 
     inline void SetWidth(uint16_t widthN) { width = widthN; }
     inline uint16_t GetWidth() const { return width; }
+    void SendMessage(std::string m);
+
+    Mediator* pMediator;
 
 protected:
 
@@ -39,6 +44,8 @@ public:
     double GetX() const override;
     void SetWidth(uint16_t widthN);
     uint16_t GetScore() const override;
+    void DrawMessage(std::string m);
+    void SetMediator(Mediator* med) { tank.pMediator = med; }
 
 private:
     TankAdaptee tank;

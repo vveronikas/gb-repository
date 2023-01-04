@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "GameObject.h"
+#include "Mediator.h"
 
 class LevelGUI : public GameObject {
 public:
@@ -17,6 +18,8 @@ public:
     inline void SetFinishX(uint16_t finishXN) { finishX = finishXN; }
 
     void Draw() const override;
+
+    Mediator* mediator;
 
 private:
 

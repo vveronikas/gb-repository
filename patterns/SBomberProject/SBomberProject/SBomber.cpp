@@ -10,6 +10,7 @@
 #include "House.h"
 #include "LogVisitor.h"
 #include "Command.cpp"
+#include "Mediator.h"
 
 using namespace std;
 using namespace MyTools;
@@ -44,6 +45,7 @@ SBomber::SBomber()
     pGUI->SetHeight(maxY - 4);
     pGUI->SetFinishX(offset + width - 4);
     vecStaticObj.push_back(pGUI);
+    pGUI->mediator = new Mediator;
 
     Ground* pGr = new Ground;
     const uint16_t groundY = maxY - 5;
@@ -55,11 +57,15 @@ SBomber::SBomber()
     pTank->SetWidth(13);
     pTank->SetPos(30, groundY - 1);
     vecStaticObj.push_back(pTank);
+    pTank->SetMediator(pGUI->mediator);
+    pGUI->mediator->AddTank(pTank);
 
     pTank = new TankAdapter;
     pTank->SetWidth(13);
     pTank->SetPos(50, groundY - 1);
     vecStaticObj.push_back(pTank);
+    pTank->SetMediator(pGUI->mediator);
+    pGUI->mediator->AddTank(pTank);
 
     House * pHouse = new House;
     pHouse->SetWidth(13);
@@ -298,7 +304,6 @@ void SBomber::DrawFrame()
 {
     MyTools::FileLoggerSingletone* logger = MyTools::FileLoggerSingletone::GetInstance();
     logger->WriteToLog(string(__FUNCTION__) + " was invoked");
-
     for (size_t i = 0; i < vecDynamicObj.size(); i++)
     {
         if (vecDynamicObj[i] != nullptr)

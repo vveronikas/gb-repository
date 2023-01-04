@@ -3,6 +3,7 @@
 
 #include "Tank.h"
 #include "MyTools.h"
+#include "Mediator.h"
 
 using namespace std;
 using namespace MyTools;
@@ -82,3 +83,14 @@ uint16_t TankAdapter::GetScore() const
 {
     return tank.GetScore();
 }
+
+void TankAdaptee::SendMessage(std::string m)
+{
+	pMediator->Notify(m);
+}
+
+void TankAdapter::DrawMessage(std::string m)
+{
+	GotoXY(tank.GetX() + 1, GetMaxY() - 3);
+	cout << m;
+};
