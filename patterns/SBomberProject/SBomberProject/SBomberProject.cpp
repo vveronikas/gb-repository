@@ -33,6 +33,7 @@ int main(void)
 
     } while (!game.GetExitFlag());
 
+    game.AnimateScrolling();
     logger->CloseLogFile();
 
     return 0;

@@ -29,6 +29,42 @@ public:
     void MoveObjects();
     void CheckObjects();
 
+    void AnimateScrolling();
+
 private:
     SBomberImpl* bImpl;
 };
+
+static const size_t ScrollHeight = 30;
+static const size_t ScrollWidth = 30;
+static const char* ppScroll[ScrollHeight] =
+{ "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                       Project manager:   ",
+  "                       Ivan Vasilevich    ",
+  "                    ",
+  "                          Developers:        ",
+  "                       Nikolay Gavrilov   ",
+  "                       Dmitriy Sidelnikov ",
+  "                       Eva Brown          ",
+  "                    ",
+  "                          Designers:         ",
+  "                       Anna Pachenkova    ",
+  "                       Elena Shvaiber     ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+  "                    ",
+ "                     "};

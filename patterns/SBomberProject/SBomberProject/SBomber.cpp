@@ -132,3 +132,24 @@ void SBomber::TimeFinish()
     MyTools::FileLoggerSingletone* logger = MyTools::FileLoggerSingletone::GetInstance();
     logger->WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)bImpl->deltaTime);
 }
+
+void SBomber::AnimateScrolling()
+{
+    const size_t windowHeight = 10; // Размер окна для скроллинга
+    const size_t startX = MyTools::GetMaxX() / 2 - ScrollWidth / 2;
+    const size_t startY = MyTools::GetMaxY() / 2 - windowHeight / 2;
+    double curPos = 0;
+    do {
+        TimeStart();
+        MyTools::ClrScr();
+        int total = (windowHeight + curPos > ScrollHeight) ? ScrollHeight  : windowHeight + curPos;
+        for (int i = curPos; i < total; i++)
+        {
+            std::cout << ppScroll[i] << std::endl;
+        }
+        MyTools::GotoXY(0, 0);
+        TimeFinish();
+        curPos += bImpl->deltaTime * 0.0015;
+    } while (!_kbhit() && int(curPos) <= (ScrollHeight - windowHeight));
+    MyTools::ClrScr();
+}
