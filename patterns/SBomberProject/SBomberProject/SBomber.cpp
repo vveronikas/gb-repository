@@ -77,6 +77,14 @@ void SBomber::ProcessKBHit()
         command.DropBomb(bImpl->vecDynamicObj, bImpl->bombsNumber, bImpl->score, bImpl->FindPlane());
         break;
 
+    case 'd':
+        command.DropBombAndClone(bImpl->vecDynamicObj, bImpl->bombsNumber, bImpl->score, bImpl->FindPlane());
+        break;
+
+    case 'D':
+        command.DropBombAndClone(bImpl->vecDynamicObj, bImpl->bombsNumber, bImpl->score, bImpl->FindPlane());
+        break;
+
     default:
         break;
     }

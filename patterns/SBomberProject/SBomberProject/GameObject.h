@@ -8,6 +8,7 @@ public:
     virtual void Draw() const = 0;
 
     virtual inline void SetPos(double nx, double ny) { x = nx; y = ny; }
+    virtual inline std::pair<double, double> GetPos() { return { x, y }; }
 
     virtual inline double GetY() const { return y; }
     virtual inline double GetX() const { return x; }

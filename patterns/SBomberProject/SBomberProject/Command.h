@@ -38,11 +38,19 @@ public:
     DropBombCommand(std::vector<DynamicObject*>& vector, const uint16_t& number, const int16_t& sc, Plane* p) :
         bombsNumber(number), vecDynamicObj(vector), score(sc), plane(p) {};
     void Execute() override;
-private:
+protected:
     uint16_t bombsNumber;
     std::vector<DynamicObject*> vecDynamicObj;
     int16_t score;
     Plane* plane;
+};
+
+class DropBombAndCloneCommand : public DropBombCommand
+{
+public:
+        DropBombAndCloneCommand(std::vector<DynamicObject*>& vector, const uint16_t& number, const int16_t& sc, Plane* p) :
+        DropBombCommand(vector, number, sc, p) {};
+    void Execute() override;
 };
 
 class DoCommand
@@ -59,6 +67,8 @@ public:
     void DeleteStaticObj(GameObject* object, std::vector<GameObject*>& vector);
     void DeleteDynamicObj(DynamicObject* object, std::vector<DynamicObject*>& vector);
     void DropBomb(std::vector<DynamicObject*>& vector, const uint16_t& number, const int16_t& sc, Plane* plane);
+    void DropBombAndClone(std::vector<DynamicObject*>& vector, const uint16_t& number, const int16_t& sc, Plane* plane);
+
 private:
     std::vector<ICommand*> doneCommands;
     ICommand* command;
