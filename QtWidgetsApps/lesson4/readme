@@ -1,0 +1,9 @@
+Read me:
+You can save file to the selected directory 
+and open file form the selected directory.
+
+ctrl+o - open a file
+ctrl+s - save current file as ...
+ctrl+n - new document
+ctrl+q - exit
+
