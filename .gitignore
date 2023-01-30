@@ -51,3 +51,31 @@ CmakeFiles/*
 *.filters
 *.user
 *.enc
+
+*.CopyComplete
+
+*.nupkg
+
+*.pump
+
+с\+\+ (part 2)/task8 (tests)/packages/Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.6/build/native/include/gtest/internal/gtest-type-util.h
+
+*.vsidx
+
+с\+\+ (part 2)/task1/.vs/task1/FileContentIndex/
+
+с\+\+ (part 2)/task1/.vs/task1/v17/
+
+patterns/SBomberProject/.vs/
+
+с\+\+ (part 2)/task1/packages/Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.6/
+
+с\+\+ (part 2)/task8 (tests)/packages/Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.6/
+
+с\+\+ (part 2)/task8 (tests)/packages.config
+
+с\+\+ (part 2)/task1/packages.config
+
+*.db-shm
+
+*.db-wal
