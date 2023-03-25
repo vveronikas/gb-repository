@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
+class ACannon;
 
 UCLASS()
 class TANKS_API ATankPawn : public APawn
@@ -17,8 +18,15 @@ public:
 	
 	void MoveForward(float DeltaTime);
 	void MoveRight(float Value);
+	void RotateRight(float Value);
+
+	void Fire();
+
+	void SetupCannon(TSubclassOf<ACannon> newCannonClass);
+	void ChangeCannonType();
 
 protected:
+	virtual void BeginPlay() override;
 
 	void SetLocation(const float DeltaTime);
 
@@ -37,14 +45,32 @@ protected:
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Components")
 	class UCameraComponent* Camera;
 
+	UPROPERTY()
+	ACannon* Cannon;
+
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Cannon")
+	class UArrowComponent* CannonSetupPoint;
+
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Cannon")
+	TSubclassOf<ACannon> CannonCalss;
+
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Movement")
 	float MoveSpeed = 100.0f;
 
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Movement")
 	float RotationSpeed = 100.0f;
 
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Movement")
+	float TurretRotationInterpolationKey = 0.1f;
+
+	UPROPERTY()
+	class ATankPlayerController* TankController;
+
+
+private:
 	float targetForwardAxisValue = 0;
 	float targetRightAxisValue = 0;
+	float targetRotateRightAxisValue = 0;
 
 
 public:	
