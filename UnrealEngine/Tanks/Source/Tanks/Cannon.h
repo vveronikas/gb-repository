@@ -19,7 +19,7 @@ public:
 	bool IsReadyToFire();
 	void Reload();
 	void ReloadProjectileAmount();
-	void ChangeCannonType();
+	void IncreaseProjectileAmount(const size_t value);
 
 protected:
 	virtual void BeginPlay() override;
@@ -33,8 +33,14 @@ protected:
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Components")
 	ECannonType CannonType = ECannonType::FireProjectile;
 
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Components")
+	TSubclassOf<class AProjectile> ProjectileClass;
+
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Fire params")
 	float FireRate = 1.0f;
+
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Fire params")
+	float FireRange = 1000.0f;
 
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Fire params")
 	float Danmage = 1.0f;

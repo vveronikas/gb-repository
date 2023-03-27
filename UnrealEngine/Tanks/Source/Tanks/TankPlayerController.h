@@ -30,7 +30,7 @@ protected:
 	void RotateRight(float Value);
 
 	void Fire();
-	void ChangeCannonType();
+	void SwapCannon();
 
 	FVector MousePos;
 };

@@ -23,7 +23,9 @@ public:
 	void Fire();
 
 	void SetupCannon(TSubclassOf<ACannon> newCannonClass);
-	void ChangeCannonType();
+	void SwapCannon();
+
+	ACannon* GetCannon() const { return Cannon; };
 
 protected:
 	virtual void BeginPlay() override;
@@ -52,7 +54,10 @@ protected:
 	class UArrowComponent* CannonSetupPoint;
 
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Cannon")
-	TSubclassOf<ACannon> CannonCalss;
+	TSubclassOf<ACannon> EquippedCannonCalss;
+
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Cannon")
+	TSubclassOf<ACannon> SecondCannonCalss;
 
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Movement")
 	float MoveSpeed = 100.0f;

@@ -4,6 +4,7 @@
 #include "Cannon.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
+#include "Projectile.h"
 
 ACannon::ACannon()
 {
@@ -36,12 +37,36 @@ void ACannon::Fire()
 
 	if (CannonType == ECannonType::FireProjectile)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString::Printf(TEXT("Fire projectile")));
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSwanPoint->GetComponentLocation(),
+																	ProjectileSwanPoint->GetComponentRotation());
+		if (Projectile)
+		{
+			Projectile->Start();
+		}
 		projectileAmount--;
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString::Printf(TEXT("FireTrace")));
+		FHitResult hitResult;
+		FCollisionQueryParams traceParams = FCollisionQueryParams();
+		traceParams.AddIgnoredActor(this);
+		traceParams.bReturnPhysicalMaterial = false;
+
+		FVector Start = ProjectileSwanPoint->GetComponentLocation();
+		FVector End = Start + ProjectileSwanPoint->GetForwardVector() * FireRange;
+
+		if (GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECollisionChannel::ECC_Visibility, traceParams))
+		{
+			DrawDebugLine(GetWorld(), Start, hitResult.Location, FColor::Red, false, 1.0f, 0, 5);
+			if (hitResult.GetActor())
+			{
+				hitResult.GetActor()->Destroy();
+			}
+		}
+		else
+		{
+			DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 1.0f, 0, 5);
+		}
 		projectileAmount--;
 	}
 	bReadyToFire = false;
@@ -73,14 +98,8 @@ void ACannon::ReloadProjectileAmount()
 	bReadyToFire = true;
 }
 
-void ACannon::ChangeCannonType()
+void ACannon::IncreaseProjectileAmount(const size_t value)
 {
-	if (CannonType == ECannonType::FireProjectile)
-	{
-		CannonType = ECannonType::FireTrace;
-	}
-	else
-	{
-		CannonType = ECannonType::FireProjectile;
-	}
-}
+	projectileAmount += value;
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Projectile amount: %d"), projectileAmount));
+};

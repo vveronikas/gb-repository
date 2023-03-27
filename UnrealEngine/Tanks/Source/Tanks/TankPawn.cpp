@@ -100,7 +100,7 @@ void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	TankController = Cast<ATankPlayerController>(GetController());
-	SetupCannon(CannonCalss);
+	SetupCannon(EquippedCannonCalss);
 }
 
 void ATankPawn::Fire()
@@ -108,14 +108,6 @@ void ATankPawn::Fire()
 	if (Cannon)
 	{
 		Cannon->Fire();
-	}
-}
-
-void ATankPawn::ChangeCannonType()
-{
-	if (Cannon)
-	{
-		Cannon->ChangeCannonType();
 	}
 }
 
@@ -136,4 +128,12 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> newCannonClass)
 
 	Cannon = GetWorld()->SpawnActor<ACannon>(newCannonClass, spawnParams);
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	EquippedCannonCalss = newCannonClass;
+}
+
+void ATankPawn::SwapCannon()
+{
+	TSubclassOf<ACannon> temp = EquippedCannonCalss;
+	SetupCannon(SecondCannonCalss);
+	SecondCannonCalss = temp;
 }
